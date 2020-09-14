@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { IoIosMail } from 'react-icons/io'
 import { FaHeadphones, FaKey, FaLastfmSquare } from 'react-icons/fa'
 
@@ -15,6 +16,8 @@ import {
  } from './styles';
 
 const Login: React.FC = () => {
+  const history = useHistory();
+
   return (
     <Container>
       <Logo>
@@ -29,7 +32,7 @@ const Login: React.FC = () => {
           <form action="#">
             <Input name="email" icon={IoIosMail} placeholder="Email" />
             <Input name="password" icon={FaKey} placeholder="Password" />
-            <button type="button">
+            <button type="button" onClick={() => history.push('/dashboard')}>
               <span>Sign-in with</span>
               <FaLastfmSquare />
             </button>
