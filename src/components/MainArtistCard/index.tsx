@@ -3,7 +3,23 @@ import { FaRecordVinyl, FaMusic } from 'react-icons/fa';
 
 import { Container, PositionBox, InfoBox, AlbumSongInfo } from './styles';
 
-const MainArtistCard: React.FC = () => {
+interface ArtistCardProps {
+  artist: string;
+  artistScrobbles: number;
+  favAlbum: string;
+  favAlbumScrobbles: number;
+  favSong: string;
+  favSongScrobbles: number;
+}
+
+const MainArtistCard: React.FC<ArtistCardProps> = ({
+  artist,
+  artistScrobbles,
+  favAlbum,
+  favAlbumScrobbles,
+  favSong,
+  favSongScrobbles,
+}) => {
   return (
    <Container>
      <PositionBox>1</PositionBox>
@@ -12,8 +28,8 @@ const MainArtistCard: React.FC = () => {
 
      <InfoBox>
        <header>
-        <strong>Green Day</strong>
-        <span>3513 scrobbles</span>
+        <strong>{artist}</strong>
+        <span>{artistScrobbles} scrobbles</span>
        </header>
 
        <AlbumSongInfo>
@@ -25,8 +41,8 @@ const MainArtistCard: React.FC = () => {
          <div>
            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543" alt="American Idiot"/>
            <section>
-             <span>American Idiot</span>
-             <span>529 scrobbles</span>
+             <span>{favAlbum}</span>
+             <span>{favAlbumScrobbles} scrobbles</span>
            </section>
          </div>
        </AlbumSongInfo>
@@ -40,8 +56,8 @@ const MainArtistCard: React.FC = () => {
          <div>
            <img src="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543" alt="American Idiot"/>
            <section>
-             <span>Whatsername</span>
-             <span>73 scrobbles</span>
+             <span>{favSong}</span>
+             <span>{favSongScrobbles} scrobbles</span>
            </section>
          </div>
        </AlbumSongInfo>
