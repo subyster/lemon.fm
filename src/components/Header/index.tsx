@@ -1,10 +1,15 @@
 import React from 'react';
 
 import lemon from '../../assets/lemon.svg';
+import { User } from '../../@types';
 
 import { Container, Logo, UserBlock } from './styles';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  user: User;
+}
+
+const Header: React.FC<HeaderProps> = ({ user }) => {
   return (
    <Container>
      <Logo>
@@ -13,9 +18,14 @@ const Header: React.FC = () => {
       </Logo>
 
       <UserBlock>
-        <strong>arthursub</strong>
+        <a href={user.url} target="_blank" rel="noopener noreferrer" >{user.name}</a>
         <button type="button">
-          <img src="https://avatars1.githubusercontent.com/u/62660107?s=460&u=8fe8ae772a121483adb2dac988393391f5d652ac&v=4" alt="user-avatar"/>
+          <img
+            src={
+              user.image
+              ? user.image.filter(image => image.size === "medium")[0]["#text"]
+              : ""
+            } alt={user.name}/>
         </button>
       </UserBlock>
    </Container>

@@ -14,7 +14,6 @@ export const Container = styled.div`
     width: 100%;
     height: 256px;
     object-fit: cover;
-    border-bottom: 1px solid var(--primary-dark);
     border-radius: 16px 16px 0 0;
   }
 `;

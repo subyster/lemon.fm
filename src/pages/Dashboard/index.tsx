@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { FaCaretDown } from 'react-icons/fa';
+import { format, formatDistanceStrict, fromUnixTime } from 'date-fns';
+import api from '../../services/api';
 
 import {
   Container,
@@ -12,15 +15,132 @@ import {
   LastScrobbles,
 } from './styles';
 
+import { Params, User, LastScrobble, Artist, Album, Track } from '../../@types';
+
 import Header from '../../components/Header';
 import MainArtistCard from '../../components/MainArtistCard';
 import ArtistCard from '../../components/ArtistCard';
 import ScrobbleBox from '../../components/ScrobbleBox';
 
 const Dashboard: React.FC = () => {
+  const { username } = useParams<Params>();
+
+  const [user, setUser] = useState<User>({} as User);
+  const [totalLovedTracks, setTotalLovedTracks] = useState(0);
+  const [totalArtists, setTotalArtists] = useState(0);
+  const [topArtist, setTopArtist] = useState<Artist>({} as Artist);
+  const [topArtists, setTopArtists] = useState<Artist[]>();
+  const [topArtistFirstAlbum, setTopArtistFirstAlbum] = useState<Album>({} as Album);
+  const [topArtistFirstTrack, setTopArtistFirstTrack] = useState<Track>({} as Track);
+  const [lastScrobbles, setLastScrobbles] = useState<LastScrobble[]>([]);
+
+  const userStartDate = useCallback((uts: number) => {
+      const startAccount = fromUnixTime(uts);
+
+      const formatDate = format(startAccount, "d MMM 'of' yyyy");
+
+      return formatDate;
+  }, []);
+
+  useEffect(() => {
+    api.get(
+      `?method=user.getinfo
+        &user=${username}
+        &api_key=05dca2effc7744bec63ee4bf14bfa310
+        &format=json
+      `
+    ).then(response => {
+      setUser(response.data.user);
+    })
+  }, [username]);
+
+  useEffect(() => {
+    api.get(
+      `?method=user.getlovedtracks
+        &user=${username}
+        &api_key=05dca2effc7744bec63ee4bf14bfa310
+        &format=json
+      `
+    ).then(response => {
+      setTotalLovedTracks(response.data.lovedtracks["@attr"].total);
+    })
+  }, [username]);
+
+  useEffect(() => {
+    api.get(
+      `?method=user.gettopartists
+        &user=${username}
+        &limit=1
+        &api_key=05dca2effc7744bec63ee4bf14bfa310
+        &format=json
+      `
+    ).then(response => setTotalArtists(response.data.topartists["@attr"].total));
+  }, [username]);
+
+  useEffect(() => {
+    api.get(
+      `?method=user.gettopartists
+        &user=${username}
+        &limit=5
+        &api_key=05dca2effc7744bec63ee4bf14bfa310
+        &format=json
+      `
+    ).then(async response => {
+      const firstPlace: Artist = response.data.topartists.artist[0];
+
+      setTopArtist(firstPlace);
+
+      const otherArtists = await response.data.topartists.artist.slice(1, 5);
+
+      setTopArtists(otherArtists);
+
+      api.get(
+        `?method=user.gettopalbums
+          &user=${username}
+          &api_key=05dca2effc7744bec63ee4bf14bfa310
+          &format=json
+        `
+      ).then(response => {
+        const topArtistAlbum: Album = response.data.topalbums.album.find(
+          (album: Album) => album.artist.name === firstPlace.name
+        );
+
+        setTopArtistFirstAlbum(topArtistAlbum);
+      });
+
+      api.get(
+        `?method=user.gettoptracks
+          &user=${username}
+          &limit=400
+          &api_key=05dca2effc7744bec63ee4bf14bfa310
+          &format=json
+        `
+      ).then(response => {
+        const topArtistTrack: Track = response.data.toptracks.track.find(
+          (track: Track) => track.artist.name === firstPlace.name
+        );
+
+        setTopArtistFirstTrack(topArtistTrack);
+      })
+    });
+  }, [username]);
+
+  useEffect(() => {
+    api.get(
+      `?method=user.getrecenttracks
+        &user=${username}
+        &limit=5&extended=1
+        &api_key=05dca2effc7744bec63ee4bf14bfa310
+        &format=json
+      `
+    ).then(response => {
+      setLastScrobbles(response.data.recenttracks.track);
+    })
+  }, [username]);
+
   return (
     <Container>
-      <Header />
+      <Header user={user} />
 
       <Content>
         <MainColumn>
@@ -33,109 +153,79 @@ const Dashboard: React.FC = () => {
           </MainColumnHeader>
 
           <MainArtistCard
-            artist="Green Day"
-            artistScrobbles={3532}
-            favAlbum="American Idiot"
-            favAlbumScrobbles={529}
-            favSong="Whatsername"
-            favSongScrobbles={73}
+            artistImage={
+              topArtist.image
+                ? topArtist.image.filter(image => image.size === "mega")[0]["#text"]
+                : ""
+            }
+            artist={topArtist.name}
+            artistScrobbles={topArtist.playcount}
+            favAlbum={topArtistFirstAlbum ? topArtistFirstAlbum.name : "Carregando"}
+            favAlbumUrl={topArtistFirstAlbum.image
+              ? topArtistFirstAlbum.image.filter(image => image.size === "medium")[0]["#text"]
+              : ""
+            }
+            favAlbumScrobbles={topArtistFirstAlbum ? topArtistFirstAlbum.playcount : 0}
+            favSong={topArtistFirstTrack ? topArtistFirstTrack.name : "Carregando"}
+            favSongCover={topArtistFirstTrack.image
+              ? topArtistFirstTrack.image.filter(image => image.size === "medium")[0]["#text"]
+              : ""
+            }
+            favSongScrobbles={topArtistFirstTrack ? topArtistFirstTrack.playcount : 0}
           />
 
           <ArtistsGrid>
-            <ArtistCard
-              position={2}
-              artistImage="https://lastfm.freetls.fastly.net/i/u/770x0/849c3f70b914d9707446a39ec07da82d.webp#849c3f70b914d9707446a39ec07da82d"
-              artistName="Avenged Sevenfold"
-              artistScrobbles={3355}
-            />
-
-            <ArtistCard
-              position={3}
-              artistImage="https://lastfm.freetls.fastly.net/i/u/770x0/1a5ef2bb4fe3a89ee25f5a592ad5b49e.webp#1a5ef2bb4fe3a89ee25f5a592ad5b49e"
-              artistName="Arctic Monkeys"
-              artistScrobbles={3347}
-            />
-
-            <ArtistCard
-              position={4}
-              artistImage="https://lastfm.freetls.fastly.net/i/u/770x0/75e7379267c64dd688df97acfe31d344.webp#75e7379267c64dd688df97acfe31d344"
-              artistName="The Beatles"
-              artistScrobbles={2371}
-            />
-
-            <ArtistCard
-              position={5}
-              artistImage="https://lastfm.freetls.fastly.net/i/u/770x0/cab8b49f9c91da6bbf61ff55cab2fe85.webp#cab8b49f9c91da6bbf61ff55cab2fe85"
-              artistName="Panic! at the Disco"
-              artistScrobbles={2158}
-            />
+            {topArtists?.map(artist => (
+              <ArtistCard
+                key={artist.url}
+                position={artist["@attr"].rank}
+                artistImage={artist.image.filter(image => image.size === "extralarge")[0]["#text"]}
+                artistName={artist.name}
+                artistScrobbles={artist.playcount}
+              />
+            ))}
           </ArtistsGrid>
         </MainColumn>
 
         <StatsColumn>
           <h1>My stats</h1>
 
-          <p>Scrobbling since 1 May 2011</p>
+            <p>Scrobbling since {user.registered && userStartDate(user.registered["#text"])}</p>
 
           <StatsBox>
             <li>
               <strong>Scrobbles</strong>
-              <span>106,661</span>
+              <span>{user.playcount}</span>
             </li>
 
             <li>
               <strong>Artists</strong>
-              <span>1,048</span>
+              <span>{totalArtists}</span>
             </li>
 
             <li>
               <strong>Loved Tracks</strong>
-              <span>648</span>
+              <span>{totalLovedTracks}</span>
             </li>
           </StatsBox>
 
           <LastScrobbles>
             <h1>Last Scrobbles</h1>
 
-            <ScrobbleBox
-              albumCover="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543"
-              timePlayed="Now"
-              songName="Letterbomb"
-              albumName="American Idiot"
-              artistName="Green Day"
-            />
-
-            <ScrobbleBox
-              albumCover="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543"
-              timePlayed="Now"
-              songName="Letterbomb"
-              albumName="American Idiot"
-              artistName="Green Day"
-            />
-
-            <ScrobbleBox
-              albumCover="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543"
-              timePlayed="Now"
-              songName="Letterbomb"
-              albumName="American Idiot"
-              artistName="Green Day"
-            />
-
-            <ScrobbleBox
-              albumCover="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543"
-              timePlayed="Now"
-              songName="Letterbomb"
-              albumName="American Idiot"
-              artistName="Green Day"
-            />
-
-            <ScrobbleBox
-              albumCover="https://lastfm.freetls.fastly.net/i/u/770x0/d5b5e314af7c4124943582fe3a595543.webp#d5b5e314af7c4124943582fe3a595543"
-              timePlayed="Now"
-              songName="Letterbomb"
-              albumName="American Idiot"
-              artistName="Green Day"
-            />
+            {lastScrobbles.map(scrobble => (
+              <ScrobbleBox
+                key={scrobble.mbid}
+                albumCover={scrobble.image.filter(image => image.size === "medium")[0]["#text"]}
+                timePlayed={
+                  scrobble.date?.uts
+                    ? formatDistanceStrict(new Date(), fromUnixTime(scrobble.date.uts))
+                    : "Now"
+                }
+                songName={scrobble.name}
+                albumName={scrobble.album["#text"]}
+                artistName={scrobble.artist.name}
+              />
+            ))}
 
           </LastScrobbles>
         </StatsColumn>

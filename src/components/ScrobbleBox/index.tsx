@@ -19,27 +19,27 @@ const ScrobbleBox: React.FC<ScrobbleProps> = ({
   artistName,
 }) => {
   return (
-    <Container>
+    <Container className={timePlayed === "Now" ? "now" : ""}>
       <section>
         <img src={albumCover} alt={albumName}/>
         <span>{timePlayed}</span>
       </section>
 
       <ScrobbleInfo>
-        <span>
+        <p>
           <FaMusic />
-          {songName}
-        </span>
+          <span>{songName}</span>
+        </p>
 
-        <span>
+        <p>
           <FaRecordVinyl />
-          {albumName}
-        </span>
+          <span>{albumName}</span>
+        </p>
 
-        <span>
+        <p>
           <FaMicrophoneAlt />
-          {artistName}
-        </span>
+          <span>{artistName}</span>
+        </p>
       </ScrobbleInfo>
     </Container>
   );

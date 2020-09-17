@@ -51,8 +51,13 @@ export const UserBlock = styled.div`
   display: flex;
   align-items: center;
 
-  strong {
+  a {
+    text-decoration: none;
     display: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   button {
@@ -69,7 +74,7 @@ export const UserBlock = styled.div`
   }
 
   @media (min-width: 600px) {
-    strong {
+    a {
       display: unset;
       font-weight: 500;
       font-size: 20px;
@@ -77,7 +82,7 @@ export const UserBlock = styled.div`
   }
 
   @media (min-width: 1180px) {
-    strong {
+    a {
       font-size: 24px;
     }
 

@@ -89,14 +89,14 @@ export const LoginMenu = styled.div`
   }
 
   form {
-    margin-top: 16px;
+    margin-top: 24px;
 
     button {
       display: flex;
       align-items: center;
       justify-content: center;
 
-      margin-top: 32px;
+      margin-top: 24px;
       background-color: var(--primary-dark);
       width: 100%;
       height: 56px;

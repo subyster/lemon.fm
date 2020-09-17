@@ -12,7 +12,8 @@ export const Container = styled.div`
 
   > img {
     width: 280px;
-    height: 280px;
+    height: 100%;
+    object-fit: cover;
     border-radius: 16px 0 0 16px;
     border-right: 1px solid var(--primary-dark);
   }
