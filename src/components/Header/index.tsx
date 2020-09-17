@@ -12,7 +12,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ user }) => {
   return (
    <Container>
-     <Logo>
+     <Logo to="/">
         <img src={lemon} alt="logo"/>
         <strong>lemon.fm</strong>
       </Logo>

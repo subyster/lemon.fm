@@ -26,20 +26,20 @@ const ScrobbleBox: React.FC<ScrobbleProps> = ({
       </section>
 
       <ScrobbleInfo>
-        <p>
+        <div>
           <FaMusic />
           <span>{songName}</span>
-        </p>
+        </div>
 
-        <p>
+        <div>
           <FaRecordVinyl />
           <span>{albumName}</span>
-        </p>
+        </div>
 
-        <p>
+        <div>
           <FaMicrophoneAlt />
           <span>{artistName}</span>
-        </p>
+        </div>
       </ScrobbleInfo>
     </Container>
   );

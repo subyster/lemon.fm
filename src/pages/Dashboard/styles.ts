@@ -5,23 +5,40 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  margin: 50px auto 40px;
-  max-width: 1120px;
+  margin: 32px auto 40px;
+  max-width: 1200px;
+  padding: 0 40px;
 
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 1180px) {
+    margin-top: 50px;
+
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: unset;
+  }
 `;
 
 export const MainColumn = styled.div`
-  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 700px) {
+    width: 600px;
+  }
 `;
 
 export const MainColumnHeader = styled.header`
   margin-bottom: 32px;
+  width: 256px;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
 
   > strong {
     padding: 8px 16px;
@@ -36,6 +53,7 @@ export const MainColumnHeader = styled.header`
   }
 
   > button {
+    margin-top: 16px;
     padding: 8px 16px;
     width: 160px;
     background-color: var(--primary-dark);
@@ -61,22 +79,48 @@ export const MainColumnHeader = styled.header`
       height: 20px;
     }
   }
+
+  @media (min-width: 700px) {
+    width: 100%;
+
+    flex-direction: row;
+    justify-content: space-between;
+
+    > button {
+      margin-top: 0;
+    }
+  }
 `;
 
 export const ArtistsGrid = styled.div`
-  margin-top: 40px;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-row-gap: 40px;
-  grid-column-gap: 88px;
+  > div + div {
+    margin-top: 32px;
+  }
+
+  @media (min-width: 700px) {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 40px;
+    grid-column-gap: 88px;
+
+    > div + div {
+      margin-top: 0;
+    }
+  }
 `;
 
 export const StatsColumn = styled.div`
+  margin-top: 64px;
+  width: min(398px, 90vw);
   padding: 16px 24px 24px;
   border: 1px solid var(--primary);
   border-radius: 16px;
-  width: 398px;
   height: max-content;
 
   display: flex;
@@ -91,6 +135,14 @@ export const StatsColumn = styled.div`
 
   > p {
     font-weight: 500;
+  }
+
+  @media (min-width: 700px) {
+    width: 398px;
+  }
+
+  @media (min-width: 1180px) {
+    margin-top: 0;
   }
 `;
 
@@ -113,14 +165,22 @@ export const StatsBox = styled.ul`
     }
 
     strong {
-      width: 50%;
+      width: 60%;
       font-weight: 500;
-      font-size: 24px;
+      font-size: 20px;
       color: var(--primary);
+
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      @media(min-width: 700px) {
+        font-size: 24px;
+      }
     }
 
     span {
-      width: 50%;
+      width: 40%;
       font-size: 20px;
     }
   }

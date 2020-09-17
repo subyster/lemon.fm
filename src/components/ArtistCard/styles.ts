@@ -41,6 +41,7 @@ export const PositionBox = styled.div`
 
 export const ArtistInfo = styled.div`
   height: 80px;
+  max-width: 256px;
   padding: 8px 16px 16px;
   background-color: var(--secondary);
   border-radius: 0 0 16px 16px;
@@ -54,6 +55,7 @@ export const ArtistInfo = styled.div`
   strong {
     font-weight: 700;
     font-size: 24px;
+    max-width: 230px;
     color: var(--primary-dark);
 
     white-space: nowrap;

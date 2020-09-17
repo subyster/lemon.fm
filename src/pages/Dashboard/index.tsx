@@ -43,15 +43,15 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api.get(
-      `?method=user.getinfo
-        &user=${username}
-        &api_key=05dca2effc7744bec63ee4bf14bfa310
-        &format=json
-      `
-    ).then(response => {
-      setUser(response.data.user);
-    })
+      api.get(
+        `?method=user.getinfo
+          &user=${username}
+          &api_key=05dca2effc7744bec63ee4bf14bfa310
+          &format=json
+        `
+      ).then(response => {
+        setUser(response.data.user);
+      })
   }, [username]);
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -19,9 +20,10 @@ export const Container = styled.div`
   }
 `;
 
-export const Logo = styled.div`
+export const Logo = styled(Link)`
   display: flex;
   align-items: center;
+  text-decoration: none;
 
   img {
     width: 32px;
@@ -68,6 +70,7 @@ export const UserBlock = styled.div`
     img {
       width: 48px;
       height: 48px;
+      object-fit: cover;
       border-radius: 50%;
       border: 2px solid var(--primary-dark);
     }
