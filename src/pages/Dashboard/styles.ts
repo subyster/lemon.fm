@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
 
@@ -7,18 +7,48 @@ export const Container = styled.div`
 export const Content = styled.div`
   margin: 32px auto 40px;
   max-width: 1200px;
-  padding: 0 40px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
   @media (min-width: 1180px) {
+    padding: 0 40px;
     margin-top: 50px;
 
     flex-direction: row;
     justify-content: space-between;
     align-items: unset;
+  }
+`;
+
+const rotateLemon = keyframes`
+  0% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: rotate(-15deg);
+  }
+`;
+
+export const LoadingAnimation = styled.div`
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  img {
+    animation: ${rotateLemon} 1.5s infinite ease-in-out;
+  }
+
+  strong {
+    margin-top: 16px;
+    font-size: 48px;
+    color: var(--logo);
   }
 `;
 
@@ -56,7 +86,7 @@ export const MainColumnHeader = styled.header`
     margin-top: 16px;
     padding: 8px 16px;
     width: 160px;
-    background-color: var(--primary-dark);
+    background-color: var(--scrobble-border);
     border-radius: 16px;
 
     display: flex;
@@ -68,13 +98,13 @@ export const MainColumnHeader = styled.header`
     }
 
     span {
-      color: var(--primary-light);
+      color: var(--input);
       font-weight: 500;
       font-size: 20px;
     }
 
     svg {
-      fill: var(--primary-light);
+      fill: var(--input);
       width: 20px;
       height: 20px;
     }

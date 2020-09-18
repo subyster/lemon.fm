@@ -4,8 +4,8 @@ export const Container = styled.div`
   width: 100%;
   height: 112px;
   padding: 16px 8px 16px 16px;
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-dark);
+  background-color: var(--scrobble-box);
+  border: 1px solid var(--scrobble-border);
   border-radius: 16px;
 
   display: flex;

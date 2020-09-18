@@ -2,16 +2,16 @@ import { createGlobalStyle } from 'styled-components'
 
 export default createGlobalStyle`
   :root {
-    --background: #F3FFD7;
-    --primary: #4CD105;
-    --primary-dark: #1E5003;
-    --primary-light: #DAFE86;
-    --secondary: #F9FFEB;
-    --text: #081401;
+    ${props => {
+      const theme = props.theme;
 
-    --logo: #4CD105;
-    --input: #DAFE86;
+      let append = '';
+      Object.entries(theme).forEach(([prop, value]) => {
+        append += `--${prop}: ${value};`;
+      });
 
+      return append;
+    }}
   }
 
   * {
@@ -32,6 +32,8 @@ export default createGlobalStyle`
     color: var(--text);
     font-weight: 400;
     font-family: Roboto, sans-serif;
+
+    transition: color .2s ease-out;
   }
 
   html, body, #root {

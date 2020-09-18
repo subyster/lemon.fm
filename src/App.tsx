@@ -3,14 +3,17 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Routes from './routes';
 import GlobalStyles from './styles/GlobalStyles';
+import { AppThemeProvider } from './styles/theme';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Routes />
+    <AppThemeProvider>
+      <Router>
+        <Routes />
 
-      <GlobalStyles />
-    </ Router>
+        <GlobalStyles />
+      </ Router>
+    </AppThemeProvider>
   );
 }
 

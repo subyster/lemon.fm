@@ -48,7 +48,7 @@ export const PositionBox = styled.div`
 
   font-weight: 700;
   font-size: 24px;
-  color: var(--primary-dark);
+  color: var(--position);
 
   display: flex;
   align-items: center;

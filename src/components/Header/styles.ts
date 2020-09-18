@@ -24,6 +24,7 @@ export const Logo = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  transition: opacity 0.3s;
 
   img {
     width: 32px;
@@ -35,6 +36,10 @@ export const Logo = styled(Link)`
     font-weight: 700;
     font-size: 24px;
     color: var(--logo);
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 
   @media (min-width: 600px) {
@@ -55,6 +60,7 @@ export const UserBlock = styled.div`
 
   a {
     text-decoration: none;
+    color: var(--username);
     display: none;
 
     &:hover {

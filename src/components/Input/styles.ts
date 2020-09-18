@@ -29,7 +29,7 @@ export const Container = styled.div<ContainerProps>`
     background: transparent;
     flex: 1;
     border: 0;
-    color: var(--text);
+    color: var(--username);
 
     &::placeholder {
       color: var(--primary);
