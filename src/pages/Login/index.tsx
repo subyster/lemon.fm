@@ -16,6 +16,7 @@ import {
   Logo,
   Content,
   LoginMenu,
+  HomeImage,
  } from './styles';
 import api from '../../services/api';
 
@@ -90,7 +91,12 @@ const Login: React.FC = () => {
           </a>
         </LoginMenu>
 
-        <img src={homeImg} alt="A place to view your library" className="home-image"/>
+        <HomeImage>
+          <img src={homeImg} alt="A place to view your library" className="home-image"/>
+          <a href='https://www.freepik.com/vectors/music' target="_blank" rel="noopener noreferrer">
+            Music vector created by pch.vector - www.freepik.com
+          </a>
+        </HomeImage>
       </Content>
 
     </Container>

@@ -171,7 +171,7 @@ const Dashboard: React.FC = () => {
             <MainColumnHeader>
               <strong>Top Artists</strong>
               <button>
-                <span>All time</span>
+                <span>Coming soon</span>
                 <FaCaretDown />
               </button>
             </MainColumnHeader>

@@ -143,3 +143,23 @@ export const LoginMenu = styled.div`
   }
 `;
 
+export const HomeImage = styled.div`
+  display: none;
+
+
+  @media (min-width: 1180px) {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    a {
+      text-decoration: none;
+      font-size: 8px;
+    }
+
+    .home-image {
+      width: 100%;
+    }
+  }
+`;

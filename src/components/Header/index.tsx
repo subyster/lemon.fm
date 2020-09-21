@@ -4,9 +4,11 @@ import lemon from '../../assets/lemon.svg';
 import blankAvatar from '../../assets/blank-avatar.svg';
 import { User } from '../../@types';
 
-import { Container, Logo, UserBlock } from './styles';
+import { Container, Logo, UserBlock, Actions } from './styles';
 
 import { useTheme } from '../../styles/theme';
+import { FaBackward, FaLightbulb } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   user: User;
@@ -23,6 +25,15 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
       </Logo>
 
       <UserBlock>
+        <Actions>
+          <Link to="/">
+            <FaBackward />
+          </Link>
+
+          <button type="button" onClick={changeTheme}>
+            <FaLightbulb />
+          </button>
+        </Actions>
         <a href={user.url} target="_blank" rel="noopener noreferrer" >{user.name}</a>
         <button type="button" onClick={changeTheme}>
           <img

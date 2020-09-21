@@ -13,6 +13,7 @@ export const themes = {
     'scrobble-border': '#1E5003',
     position: '#1E5003',
     username: '#081401',
+    actions: '#4CD105',
   },
   dark: {
     background: '#081401',
@@ -28,6 +29,7 @@ export const themes = {
     'scrobble-border': '#1E5003',
     position: '#F3FFD7',
     username: '#4CD105',
+    actions: '#F3FFD7'
   },
 };
 

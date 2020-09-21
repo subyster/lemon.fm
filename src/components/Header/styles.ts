@@ -68,7 +68,7 @@ export const UserBlock = styled.div`
     }
   }
 
-  button {
+  > button {
     margin-left: 24px;
     height: 48px;
     background: transparent;
@@ -87,6 +87,7 @@ export const UserBlock = styled.div`
       display: unset;
       font-weight: 500;
       font-size: 20px;
+      margin-left: 16px;
     }
   }
 
@@ -95,13 +96,36 @@ export const UserBlock = styled.div`
       font-size: 24px;
     }
 
-    button {
+    > button {
       height: 64px;
 
       img {
         width: 64px;
         height: 64px;
       }
+    }
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  align-items: center;
+
+  > a {
+    margin-right: 16px;
+
+    svg {
+      fill: var(--actions);
+    }
+  }
+
+  > button {
+    background: transparent;
+    display: flex;
+    align-items: center;
+
+    svg {
+      fill: var(--actions);
     }
   }
 `;

@@ -85,7 +85,7 @@ export const MainColumnHeader = styled.header`
   > button {
     margin-top: 16px;
     padding: 8px 16px;
-    width: 160px;
+    width: max-content;
     background-color: var(--scrobble-border);
     border-radius: 16px;
 
@@ -101,6 +101,7 @@ export const MainColumnHeader = styled.header`
       color: var(--input);
       font-weight: 500;
       font-size: 20px;
+      margin-right: 16px;
     }
 
     svg {
