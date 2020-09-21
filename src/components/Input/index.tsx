@@ -1,22 +1,35 @@
-import React, { InputHTMLAttributes, useCallback, useRef, useState } from 'react';
+import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
 import { IconBaseProps } from 'react-icons';
+import { useField } from '@unform/core';
+import { RiAlertFill } from 'react-icons/ri';
 
-import { Container } from './styles';
+import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  containerStyle?: object;
   icon?: React.ComponentType<IconBaseProps>;
 }
 
 const Input: React.FC<InputProps> = ({
   name,
+  containerStyle = {},
   icon: Icon,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { fieldName, defaultValue, error, registerField } = useField(name);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+    });
+  }, [fieldName, registerField]);
 
   const handleInputFocus = useCallback(() => setIsFocused(true), []);
 
@@ -28,16 +41,25 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <Container
+      style={containerStyle}
       isFocused={isFocused}
       isFilled={isFilled}
+      isError={!!error}
     >
       {Icon && <Icon size={16} />}
       <input
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
+        defaultValue={defaultValue}
         ref={inputRef}
         {...rest}
       />
+
+      {error && (
+        <Error title={error}>
+          <RiAlertFill color="c53030" size={16} />
+        </Error>
+      )}
     </Container>
   );
 }

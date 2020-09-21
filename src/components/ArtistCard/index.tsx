@@ -1,4 +1,5 @@
 import React from 'react';
+import formatValue from '../../utils/formatValue';
 
 import { Container, PositionBox, ArtistInfo } from './styles';
 
@@ -23,7 +24,7 @@ const ArtistCard: React.FC<ArtistProps> = ({
 
       <ArtistInfo>
         <strong>{artistName}</strong>
-        <span>{artistScrobbles} scrobbles</span>
+        <span>{formatValue(artistScrobbles)} scrobbles</span>
       </ArtistInfo>
     </Container>
   );

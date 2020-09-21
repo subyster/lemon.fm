@@ -5,6 +5,7 @@ import { format, formatDistanceStrict, fromUnixTime } from 'date-fns';
 import api from '../../services/api';
 
 import lemonImg from '../../assets/lemon.svg';
+import formatValue from '../../utils/formatValue';
 
 import {
   Container,
@@ -218,17 +219,17 @@ const Dashboard: React.FC = () => {
             <StatsBox>
               <li>
                 <strong>Scrobbles</strong>
-                <span>{user.playcount}</span>
+                <span>{formatValue(user.playcount)}</span>
               </li>
 
               <li>
                 <strong>Artists</strong>
-                <span>{totalArtists}</span>
+                <span>{formatValue(totalArtists)}</span>
               </li>
 
               <li>
                 <strong>Loved Tracks</strong>
-                <span>{totalLovedTracks}</span>
+                <span>{formatValue(totalLovedTracks)}</span>
               </li>
             </StatsBox>
 
