@@ -57,6 +57,18 @@ export const MainColumn = styled.div`
   flex-direction: column;
   align-items: center;
 
+  > span {
+    max-width: 80vw;
+    line-height: 24px;
+    font-size: 20px;
+    text-align: center;
+
+    strong {
+      font-weight: 500;
+      font-size: 20px;
+    }
+  }
+
   @media (min-width: 700px) {
     width: 600px;
   }
@@ -82,33 +94,24 @@ export const MainColumnHeader = styled.header`
     }
   }
 
-  > button {
+  > div {
     margin-top: 16px;
     padding: 8px 16px;
     width: max-content;
     background-color: var(--scrobble-border);
     border-radius: 16px;
 
+    select {
+      background-color: var(--scrobble-border);
+      color: var(--input);
+      font-weight: 500;
+      font-size: 20px;
+    }
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    &:hover {
-      opacity: 0.8;
-    }
-
-    span {
-      color: var(--input);
-      font-weight: 500;
-      font-size: 20px;
-      margin-right: 16px;
-    }
-
-    svg {
-      fill: var(--input);
-      width: 20px;
-      height: 20px;
-    }
   }
 
   @media (min-width: 700px) {
@@ -117,7 +120,7 @@ export const MainColumnHeader = styled.header`
     flex-direction: row;
     justify-content: space-between;
 
-    > button {
+    > div {
       margin-top: 0;
     }
   }
@@ -142,6 +145,31 @@ export const ArtistsGrid = styled.div`
 
     > div + div {
       margin-top: 0;
+    }
+  }
+`;
+
+export const Share = styled.div`
+  width: 100%;
+  margin-top: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-right: 16px;
+  }
+
+  div {
+    svg {
+      transition: fill 0.3s;
+
+      &:hover {
+        fill: var(--primary);
+      }
     }
   }
 `;

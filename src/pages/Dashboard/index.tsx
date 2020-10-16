@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaCaretDown } from 'react-icons/fa';
+import { FaTelegram, FaWhatsapp, FaTwitter, FaFacebook } from 'react-icons/fa';
 import { format, formatDistanceStrict, fromUnixTime } from 'date-fns';
+import { FacebookShareButton, TelegramShareButton, TwitterShareButton, WhatsappShareButton } from 'react-share';
 import api from '../../services/api';
 
 import lemonImg from '../../assets/lemon.svg';
@@ -14,6 +15,7 @@ import {
   MainColumn,
   MainColumnHeader,
   ArtistsGrid,
+  Share,
   StatsColumn,
   StatsBox,
   LastScrobbles,
@@ -30,6 +32,7 @@ const Dashboard: React.FC = () => {
   const { username } = useParams<Params>();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isTopArtistsLoading, setIsTopArtistsLoading] = useState(false);
   const [user, setUser] = useState<User>({} as User);
   const [totalLovedTracks, setTotalLovedTracks] = useState(0);
   const [totalArtists, setTotalArtists] = useState(0);
@@ -82,15 +85,20 @@ const Dashboard: React.FC = () => {
     ).then(response => setTotalArtists(response.data.topartists["@attr"].total));
   }, [username]);
 
-  const loadTopArtists = useCallback(async () => {
+  const loadTopArtists = useCallback(async (listeningPeriod: string) => {
     api.get(
       `?method=user.gettopartists
         &user=${username}
         &limit=5
+        &period=${listeningPeriod}
         &api_key=05dca2effc7744bec63ee4bf14bfa310
         &format=json
       `
     ).then(async response => {
+      if(response.data.topartists['@attr'].total === 0) {
+        return;
+      }
+
       const firstPlace: Artist = response.data.topartists.artist[0];
 
       setTopArtist(firstPlace);
@@ -102,6 +110,7 @@ const Dashboard: React.FC = () => {
       api.get(
         `?method=user.gettopalbums
           &user=${username}
+          &period=${listeningPeriod}
           &api_key=05dca2effc7744bec63ee4bf14bfa310
           &format=json
         `
@@ -116,6 +125,7 @@ const Dashboard: React.FC = () => {
       api.get(
         `?method=user.gettoptracks
           &user=${username}
+          &period=${listeningPeriod}
           &limit=400
           &api_key=05dca2effc7744bec63ee4bf14bfa310
           &format=json
@@ -127,6 +137,7 @@ const Dashboard: React.FC = () => {
 
         setTopArtistFirstTrack(topArtistTrack);
         setIsLoading(false);
+        setIsTopArtistsLoading(false);
       })
     });
   }, [username]);
@@ -148,9 +159,14 @@ const Dashboard: React.FC = () => {
       loadUser();
       loadLovedTracks();
       loadTotalArtists();
-      loadTopArtists();
+      loadTopArtists("1month");
       loadLastScrobbles();
   }, [loadUser, loadLovedTracks, loadTotalArtists, loadTopArtists, loadLastScrobbles]);
+
+  const updateTopArtists = useCallback((updatedPeriod: string) => {
+    setIsTopArtistsLoading(true);
+    loadTopArtists(updatedPeriod);
+  }, [loadTopArtists]);
 
   return (
     <Container>
@@ -170,45 +186,109 @@ const Dashboard: React.FC = () => {
           <MainColumn>
             <MainColumnHeader>
               <strong>Top Artists</strong>
-              <button>
-                <span>Coming soon</span>
-                <FaCaretDown />
-              </button>
+              <div>
+                <select
+                  defaultValue="1month"
+                  onChange={(e) => updateTopArtists(e.target.value)}
+                >
+                  <option value="7day">Last 7 days</option>
+                  <option value="1month">Last month</option>
+                  <option value="3month">Last 3 months</option>
+                  <option value="6month">Last 6 months</option>
+                  <option value="12month">Last 12 months</option>
+                  <option value="overall">All time</option>
+                </select>
+              </div>
             </MainColumnHeader>
 
-            <MainArtistCard
-              artistImage={
-                topArtist.image
-                  ? topArtist.image.filter(image => image.size === "mega")[0]["#text"]
-                  : ""
-              }
-              artist={topArtist.name}
-              artistScrobbles={topArtist.playcount}
-              favAlbum={topArtistFirstAlbum ? topArtistFirstAlbum.name : "Carregando"}
-              favAlbumUrl={topArtistFirstAlbum.image
-                ? topArtistFirstAlbum.image.filter(image => image.size === "medium")[0]["#text"]
-                : ""
-              }
-              favAlbumScrobbles={topArtistFirstAlbum ? topArtistFirstAlbum.playcount : 0}
-              favSong={topArtistFirstTrack ? topArtistFirstTrack.name : "Carregando"}
-              favSongCover={topArtistFirstTrack.image
-                ? topArtistFirstTrack.image.filter(image => image.size === "medium")[0]["#text"]
-                : ""
-              }
-              favSongScrobbles={topArtistFirstTrack ? topArtistFirstTrack.playcount : 0}
-            />
+            {isTopArtistsLoading && (
+              <LoadingAnimation>
+                <img src={lemonImg} alt="lemon.fm"/>
+                <strong>Loading...</strong>
+              </LoadingAnimation>
+            )}
 
-            <ArtistsGrid>
-              {topArtists?.map(artist => (
-                <ArtistCard
-                  key={artist.url}
-                  position={artist["@attr"].rank}
-                  artistImage={artist.image.filter(image => image.size === "extralarge")[0]["#text"]}
-                  artistName={artist.name}
-                  artistScrobbles={artist.playcount}
-                />
-              ))}
-            </ArtistsGrid>
+            {(!isTopArtistsLoading && topArtist === undefined) && (
+              <span>
+                <strong>{user.name}</strong> hasn't listened to any music in the selected date range.
+              </span>
+            )}
+
+            {(!isTopArtistsLoading && topArtist !== undefined) && (
+              <MainArtistCard
+                artistImage={
+                  topArtist?.image
+                    ? topArtist.image.filter(image => image.size === "mega")[0]["#text"]
+                    : ""
+                }
+                artist={topArtist?.name}
+                artistScrobbles={topArtist?.playcount}
+                favAlbum={topArtistFirstAlbum ? topArtistFirstAlbum.name : "Carregando"}
+                favAlbumUrl={topArtistFirstAlbum?.image
+                  ? topArtistFirstAlbum.image.filter(image => image.size === "medium")[0]["#text"]
+                  : ""
+                }
+                favAlbumScrobbles={topArtistFirstAlbum ? topArtistFirstAlbum.playcount : 0}
+                favSong={topArtistFirstTrack ? topArtistFirstTrack.name : "Carregando"}
+                favSongCover={topArtistFirstTrack?.image
+                  ? topArtistFirstTrack.image.filter(image => image.size === "medium")[0]["#text"]
+                  : ""
+                }
+                favSongScrobbles={topArtistFirstTrack ? topArtistFirstTrack.playcount : 0}
+              />
+            )}
+
+            {(!isTopArtistsLoading && topArtists !== undefined) && (
+              <ArtistsGrid>
+                {topArtists?.map(artist => (
+                  <ArtistCard
+                    key={artist.url}
+                    position={artist["@attr"].rank}
+                    artistImage={artist.image.filter(image => image.size === "extralarge")[0]["#text"]}
+                    artistName={artist.name}
+                    artistScrobbles={artist.playcount}
+                  />
+                ))}
+              </ArtistsGrid>
+            )}
+
+            {!isTopArtistsLoading && (
+              <Share>
+                <h1>Share on:</h1>
+                <div>
+                  <TwitterShareButton
+                    title="Hey there! Check what I've been listening lately on:"
+                    url={`https://lemonfm.herokuapp.com/lastfm/${user.name}`}
+                  >
+                    <FaTwitter size={24}/>
+                  </TwitterShareButton>
+
+                  <FacebookShareButton
+                    quote="Hey there! Check what I've been listening lately on:"
+                    url={`https://lemonfm.herokuapp.com/lastfm/${user.name}`}
+                    style={{ marginLeft: 16 }}
+                  >
+                    <FaFacebook size={24}/>
+                  </FacebookShareButton>
+
+                  <WhatsappShareButton
+                    title="Hey there! Check what I've been listening lately on:"
+                    url={`https://lemonfm.herokuapp.com/lastfm/${user.name}`}
+                    style={{ marginLeft: 16 }}
+                  >
+                    <FaWhatsapp size={24}/>
+                  </WhatsappShareButton>
+
+                  <TelegramShareButton
+                    title="Hey there! Check what I've been listening lately on:"
+                    url={`https://lemonfm.herokuapp.com/lastfm/${user.name}`}
+                    style={{ marginLeft: 16 }}
+                  >
+                    <FaTelegram size={24}/>
+                  </TelegramShareButton>
+                </div>
+              </Share>
+            )}
           </MainColumn>
 
           <StatsColumn>
