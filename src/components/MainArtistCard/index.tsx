@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaRecordVinyl, FaMusic } from 'react-icons/fa';
+import { FaRecordVinyl, FaStar } from 'react-icons/fa';
 import formatValue from '../../utils/formatValue';
 
 import { Container, PositionBox, InfoBox, AlbumSongInfo } from './styles';
@@ -12,7 +12,7 @@ interface ArtistCardProps {
   favAlbumUrl: string;
   favAlbumScrobbles: number;
   favSong: string;
-  favSongCover: string;
+  favSongCover?: string;
   favSongScrobbles: number;
 }
 
@@ -56,13 +56,13 @@ const MainArtistCard: React.FC<ArtistCardProps> = ({
 
        <AlbumSongInfo>
          <header>
-          <FaMusic />
+          <FaStar />
           <strong>Favorite Song</strong>
          </header>
 
          <div>
-           <img src={favSongCover} alt={favSong}/>
-           <section>
+           {/* <img src={favSongCover} alt={favSong}/> */}
+           <section className="fav-song">
              <span>{favSong}</span>
              <span>{formatValue(favSongScrobbles)} scrobbles</span>
            </section>

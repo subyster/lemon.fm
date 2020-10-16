@@ -140,6 +140,10 @@ export const AlbumSongInfo = styled.div`
       }
     }
 
+    .fav-song {
+      justify-content: space-around;
+    }
+
     @media (min-width: 700px) {
       img {
         margin-right: 16px;
